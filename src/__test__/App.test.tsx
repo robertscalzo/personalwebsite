@@ -1,26 +1,27 @@
 import {describe, it} from 'vitest'
 import {fireEvent, render, screen} from "@testing-library/react";
 import {App} from "../App.tsx";
+import {MemoryRouter} from "react-router-dom";
+
+function renderWithRouter() {
+    render(<MemoryRouter><App/></MemoryRouter>);
+}
 
 describe('App test', () => {
     it("should show header tabs", () => {
-        render(<App/>);
+        renderWithRouter();
 
-        const headingTabs = screen.getByRole("tablist");
-        expect(screen.getByRole("tab", {name: "Photography"})).toBeVisible();
-        expect(screen.getByRole("tab", {name: "Engineering"})).toBeVisible();
-        expect(headingTabs).toBeVisible();
-    });
-    it("should show engineering tab on load", async () => {
-        render(<App/>);
-
-        expect(screen.getByText("Goodbye")).toBeVisible();
+        expect(screen.getByRole("button", {name: "Photography"})).toBeVisible();
+        expect(screen.getByRole("button", {name: "About"})).toBeVisible();
+        expect(screen.getByRole("button", {name: "Skills"})).toBeVisible();
+        expect(screen.getByRole("button", {name: "RESUME"})).toBeVisible();
     });
     it("should change between tabs when clicked", async () => {
-        render(<App/>);
+        renderWithRouter();
 
-        fireEvent.click(screen.getByRole("tab", {name: "Photography"}));
+        fireEvent.click(screen.getByRole("button", {name: "Photography"}));
+        const photography = await screen.findByText("Hello");
 
-        expect(await screen.findByText("Hello")).toBeVisible();
+        expect(photography).toBeVisible();
     });
 });

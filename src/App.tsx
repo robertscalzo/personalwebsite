@@ -1,46 +1,42 @@
-import {Box, Tab, Tabs, Typography} from "@mui/material";
-import React, {useState} from "react";
-import {Engineering} from "./Engineering.tsx";
+import {AppBar, Box, Button, Toolbar} from "@mui/material";
 import {Photography} from "./Photography.tsx";
+import {Route, Routes, useNavigate} from "react-router-dom";
+import React from "react";
+
+function Resume() {
+    return null;
+}
+
+const Home = ()=> {
+    return <Button>RESUME</Button>;
+};
+
+interface HeaderOffsetProps{
+    children: React.JSX.Element;
+}
+const HeaderOffset=(props:HeaderOffsetProps)=>{
+    return <Box sx={{marginTop:"68px"}}>{props.children}</Box>;
+};
 
 export const App = () => {
-
-    interface TabPanelProps {
-        children?: React.JSX.Element
-        index: number;
-        value: number;
-    }
-
-    const CustomTabPanel = (props: TabPanelProps) => {
-        const {children, value, index} = props;
-
-        return (
-            <Box
-                role="tabpanel"
-                hidden={value !== index}
-                id={`tab-${index}`}
-                aria-labelledby={`tab-${index}`}
-            >
-                {value === index && (
-                    <Box sx={{p: 3}}>
-                        <Typography>{children}</Typography>
-                    </Box>
-                )}
-            </Box>
-        );
-    };
-
-    const [selectedTab, setSelectedTab] = useState<number>(0);
+    const navigator = useNavigate();
     return (
         <>
             <Box>
-                <Tabs value={selectedTab} onChange={(_event, newValue: number) => setSelectedTab(newValue)}>
-                    <Tab id="0" value={0} label="Engineering"/>
-                    <Tab id="1" value={1} label="Photography"/>
-                </Tabs>
+                <AppBar sx={{backgroundColor: "#d3d3d3", alignItems: "flex-end", height: "60px", marginTop:"-2px"}}>
+                    <Toolbar>
+                        <Button aria-label={"About"}>ABOUT</Button>
+                        <Button aria-label={"Skills"}>SKILLS</Button>
+                        <Button aria-label={"Photography"}
+                                onClick={() => navigator("/photography")}>Photography</Button>
+                    </Toolbar>
+                </AppBar>
             </Box>
-            <CustomTabPanel value={selectedTab} index={0}><Engineering text={"Goodbye"}/></CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={1}><Photography text={"Hello"}/></CustomTabPanel>
+            <Routes>
+                <Route path={"/"} element={<HeaderOffset><Home/></HeaderOffset>}/>
+                <Route path={"/photography"} element={<HeaderOffset><Photography text={"Hello"}/></HeaderOffset>}/>
+                <Route path={"/resume"} element={<HeaderOffset><Resume/></HeaderOffset>}/>
+            </Routes>
         </>
     );
 };
